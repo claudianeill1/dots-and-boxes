@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <title>Dots & Boxes!</title>
+  <link rel="stylesheet" href="default.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <h1>Dots &amp; Boxes!</h1>
+      <button id="help-button" class="help-button" aria-label="How to Play">?</button>
+    </div>
+  </header>
+
+  <!-- Subtitle bar -->
+  <hgroup>
+    <div class="subtitle-container">
+      <h2>Fill the most boxes to win!</h2>
+    </div>
+  </hgroup>
+
+  <!-- Sidebar (aside) – structured into cards -->
+  <aside>
+    <!-- Next player card -->
+    <div class="aside-card" id="turn-indicator">
+      <div class="aside-heading">NEXT PLAYER:</div>
+      <div id="turn-name" aria-live="polite">Player 1</div>
+    </div>
+
+    <!-- Moves left card -->
+    <div class="aside-card" id="moves-remaining">
+      <div class="aside-heading">MOVES LEFT:</div>
+      <div id="moves-count">0</div>
+    </div>
+
+    <!-- current boxes (in‐game score) card -->
+    <div class="aside-card" id="scoreboard-side">
+      <div class="aside-heading">CURRENT BOXES:</div>
+      <p id="player1-score">Player 1: 0</p>
+      <p id="player2-score">Player 2: 0</p>
+    </div>
+
+    <!-- Game wins & ties card -->
+    <div class="aside-card" id="match-tally">
+      <div class="aside-heading">GAME WINS &amp; TIES:</div>
+      <p id="player1-wins">Player 1 Wins: 0</p>
+      <p id="player2-wins">Player 2 Wins: 0</p>
+      <p id="ties-wins">Ties: 0</p>
+    </div>
+  </aside>
+
+  <!-- Main: Board wrapper -->
+  <main>
+    <div class="board-wrapper">
+      <div class="board-container">
+        <table id="board"></table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer: contains the score bar (proportional fill) -->
+  <footer>
+    <div class="score-bar">
+      <div class="player player-1">
+        <div class="icon" id="player1-icon">🐱</div>
+      </div>
+      <div class="progress-container">
+        <div id="fill-left" class="progress-fill"></div>
+        <div class="midline"></div>
+        <div id="fill-right" class="progress-fill"></div>
+      </div>
+      <div class="player player-2">
+        <div class="icon" id="player2-icon">🐶</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Help overlay -->
+  <div
+    id="help-overlay"
+    class="overlay hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="help-title"
+  >
+    <div class="overlay-content">
+      <h2 id="help-title">How to Play</h2>
+      <ol>
+        <li>Players take turns adding one line at a time, either horizontal or vertical, between two adjacent dots.</li>
+        <li>If you complete all four sides of a box, you claim that box and immediately play again.</li>
+        <li>The claimed box fills with a darker shade of your color.</li>
+        <li>The bottom-bar “tug-of-war” slider shows the ratio of boxes claimed: the more you have, the further your half of the bar pushes.</li>
+        <li>When no more moves remain, the player with more boxes wins.</li>
+        <li>All you have to do is click the line you want to take, or, you can use WASD and arrow keys with Space and Enter to claim.</li>
+      </ol>
+      <button id="close-help-button" class="secondary-btn">Close</button>
+    </div>
+  </div>
+
+  <!-- Start / Game-settings overlay -->
+  <div
+    id="start-overlay"
+    class="overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="settings-title"
+  >
+    <div class="overlay-content">
+      <h2 id="settings-title">Game Settings</h2>
+
+      <fieldset class="player-fieldset">
+        <legend>Player 1 name</legend>
+        <input type="text" id="player1-name" placeholder="Player 1" />
+      </fieldset>
+
+      <fieldset class="player-fieldset">
+        <legend>Player 2 name</legend>
+        <input type="text" id="player2-name" placeholder="Player 2" />
+      </fieldset>
+
+      <fieldset>
+        <legend>Theme</legend>
+        <select id="theme-select">
+          <option value="fire-water">Fire 🔥 &amp; Water 💧</option>
+          <option value="cats-dogs">Cats 🐱 &amp; Dogs 🐶</option>
+          <option value="fairy-gremlin">Fairy 🧚&amp; Gremlin 🧌</option>
+        </select>
+      </fieldset>
+
+      <fieldset id="assignment-fieldset">
+        <legend>Assign Emojis</legend>
+        <div class="assignment-container">
+          <div class="assign-card" id="assign-p1">
+            <span class="assign-emoji" id="assign-p1-emoji"></span>
+            <label for="assign-p1-emoji">Player 1</label>
+          </div>
+          <button
+            type="button"
+            id="swap-assign"
+            aria-label="Swap player assignments"
+          >⇄</button>
+          <div class="assign-card" id="assign-p2">
+            <span class="assign-emoji" id="assign-p2-emoji"></span>
+            <label for="assign-p2-emoji">Player 2</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Grid Size</legend>
+        <label for="grid-size-slider">
+          Choose a grid of
+          <span id="grid-size-label">6 x 6</span>:
+        </label>
+        <input
+          type="range"
+          id="grid-size-slider"
+          min="2"
+          max="12"
+          value="6"
+        />
+      </fieldset>
+
+      <button id="start-button" class="primary-btn">Begin Game</button>
+    </div>
+  </div>
+
+  <!-- Game-over overlay -->
+  <div
+    id="game-over-overlay"
+    class="overlay hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="game-over-title"
+  >
+    <div class="overlay-content">
+      <h2 id="game-over-title">Game Over</h2>
+      <button id="new-game-button" class="primary-btn">New Game</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script type="module" src="main.js"></script>
+</body>
+</html>
