@@ -1,4 +1,4 @@
-import R from "./ramda.js";
+const R = window.R;
 /**
  * Dots_and_boxes.js models and plays the Dots & Boxes game.
  * @namespace Dots_and_boxes
