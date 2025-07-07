@@ -1,4 +1,3 @@
-import R from "./ramda.js";
 import Dots_and_boxes from "./Dots_and_boxes.js";
 
 // Global match-win tracker (used by showGameOver())
