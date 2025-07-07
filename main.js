@@ -1,4 +1,5 @@
 import Dots_and_boxes from "./Dots_and_boxes.js";
+const R = window.R;
 
 // Global match-win tracker (used by showGameOver())
 let playerWins = { "1": 0, "2": 0, ties: 0 };
